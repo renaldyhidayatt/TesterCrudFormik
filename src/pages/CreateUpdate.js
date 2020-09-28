@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import { createUser, updateUser, } from "../redux/actions";
-import { usersServices } from '../services'
+import { useDispatch, useSelector } from "react-redux";
+import { createUser, updateUser } from "../redux/actions";
+import { usersServices } from "../services";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { Link } from "react-router-dom";
 
@@ -18,6 +18,7 @@ function CreateUpdate({ props, match }) {
     umur: "",
     nohp: ""
   };
+  const { message } = useSelector((state) => state.message);
 
   const validationSchema = Yup.object().shape({
     nama: Yup.string().required("Nama is required"),
@@ -29,7 +30,7 @@ function CreateUpdate({ props, match }) {
   function onSubmit(data, { setStatus, setSubmitting }) {
     setStatus();
     if (isAddMode) {
-      CreateUpdate(data, setSubmitting);
+      CreateUser(data, setSubmitting);
     } else {
       UpdateUser(id, data, setSubmitting);
     }
@@ -84,6 +85,11 @@ function CreateUpdate({ props, match }) {
         return (
           <Form>
             <h1>{isAddMode ? "Add User" : "Edit User"}</h1>
+            {message && (
+              <div className="alert alert-danger" role="alert">
+                {message}
+              </div>
+            )}
             <div className="form">
               <div className="form-group">
                 <label>Nama</label>
